@@ -42,6 +42,7 @@ const Edit: NextPage = () => {
 
   return (
     <div>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="flex h-screen flex-col bg-blue-50">
           <header className="h-16 border-b bg-white shadow-md shadow-slate-200/50">
