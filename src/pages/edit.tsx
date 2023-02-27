@@ -257,15 +257,17 @@ const Edit: NextPage = () => {
                       Content
                     </label>
                     <Split
-                      className="mt-1 flex flex-1 overflow-hidden rounded-md border border-slate-300"
-                      gutter={(index, direction) => {
+                      className="relative mt-1 flex flex-1 overflow-hidden rounded-md border border-slate-300"
+                      gutterSize={1}
+                      gutter={() => {
                         const gutter = document.createElement('div')
-                        gutter.className = `gutter gutter-${direction} bg-red-500 hover:cursor-col-resize`
+                        gutter.className =
+                          'relative bg-slate-300 after:absolute after:-left-1 after:z-10 after:block after:h-full after:w-[9px] hover:cursor-col-resize hover:bg-blue-300 hover:ring-2 active:bg-blue-300 active:ring-2'
                         return gutter
                       }}
                     >
                       <textarea
-                        className="block w-full resize-none rounded-l-md p-4 outline-2 outline-blue-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                        className="block w-full resize-none rounded-l-md p-4 outline-none ring-0"
                         placeholder="Post content here..."
                         {...register('content')}
                       />
