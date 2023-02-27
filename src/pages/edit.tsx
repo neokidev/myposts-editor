@@ -32,7 +32,6 @@ const Edit: NextPage = () => {
       title: '',
       content: '',
     },
-    // reValidateMode: 'onSubmit',
   })
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     alert(JSON.stringify(data))
@@ -74,7 +73,7 @@ const Edit: NextPage = () => {
                   <div className="relative flex text-right">
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center rounded-none rounded-l-md border-r border-blue-600 bg-blue-500 px-5 py-2 text-sm font-medium text-white hover:bg-blue-600"
+                      className="inline-flex justify-center rounded-none rounded-l-md border-r border-blue-600 bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
                     >
                       {isDraft ? 'Draft' : 'Publish'}
                     </button>
@@ -82,7 +81,7 @@ const Edit: NextPage = () => {
                     <Menu>
                       <Menu.Button
                         type="button"
-                        className="inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 hover:bg-blue-600"
+                        className="inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
                       >
                         <svg
                           aria-hidden="true"
@@ -110,24 +109,24 @@ const Edit: NextPage = () => {
                         leaveTo="transform opacity-0 scale-95"
                         afterLeave={() => (isDraftRef.current = isDraft)}
                       >
-                        <Menu.Items className="absolute right-0 top-9 mt-2 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Items className="absolute right-0 top-9 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item>
                             {({ active }) => (
                               <button
                                 type="button"
                                 className={`${
                                   active ? 'bg-blue-500' : ''
-                                } group flex w-full space-y-1 rounded-t-md p-2 text-start`}
+                                } group flex w-full rounded-t-md p-3 text-start`}
                                 onClick={() => setIsDraft(false)}
                               >
-                                <div className="mr-1 w-5">
+                                <div className="w-5">
                                   {!isDraftRef.current && (
                                     <svg
                                       className={`${
                                         active
                                           ? 'stroke-white'
-                                          : 'stroke-slate-600'
-                                      } stroke-2 pt-1`}
+                                          : 'stroke-blue-500'
+                                      } stroke-2`}
                                       viewBox="0 0 24 24"
                                       fill="none"
                                       strokeLinecap="round"
@@ -143,7 +142,7 @@ const Edit: NextPage = () => {
                                   )}
                                 </div>
 
-                                <div className="flex-1">
+                                <div className="ml-2 flex-1">
                                   <h5
                                     className={`${
                                       active
@@ -172,17 +171,17 @@ const Edit: NextPage = () => {
                                 type="button"
                                 className={`${
                                   active ? 'bg-blue-500' : ''
-                                } group flex w-full space-y-1 rounded-b-md p-2 text-start`}
+                                } group flex w-full rounded-b-md p-3 text-start`}
                                 onClick={() => setIsDraft(true)}
                               >
-                                <div className="mr-1 w-5">
+                                <div className="w-5">
                                   {isDraftRef.current && (
                                     <svg
                                       className={`${
                                         active
                                           ? 'stroke-white'
-                                          : 'stroke-slate-600'
-                                      } stroke-2 pt-1`}
+                                          : 'stroke-blue-500'
+                                      } stroke-2`}
                                       viewBox="0 0 24 24"
                                       fill="none"
                                       strokeLinecap="round"
@@ -198,7 +197,7 @@ const Edit: NextPage = () => {
                                   )}
                                 </div>
 
-                                <div className="flex-1">
+                                <div className="ml-2 flex-1">
                                   <h5
                                     className={`${
                                       active
