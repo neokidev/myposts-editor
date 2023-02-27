@@ -7,9 +7,8 @@ import {
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { Toast } from 'next/dist/client/components/react-dev-overlay/internal/components/Toast'
 
 type FormValues = {
   title: string
@@ -25,6 +24,7 @@ const notify = () => toast.error("Title can't be blank")
 
 const Edit: NextPage = () => {
   const [isDraft, setIsDraft] = useState(false)
+  const isDraftRef = useRef(false)
 
   const { register, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -108,6 +108,7 @@ const Edit: NextPage = () => {
                         leave="transition ease-in duration-75"
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
+                        afterLeave={() => (isDraftRef.current = isDraft)}
                       >
                         <Menu.Items className="absolute right-0 top-9 mt-2 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item>
@@ -120,7 +121,7 @@ const Edit: NextPage = () => {
                                 onClick={() => setIsDraft(false)}
                               >
                                 <div className="mr-1 w-5">
-                                  {!isDraft && (
+                                  {!isDraftRef.current && (
                                     <svg
                                       className={`${
                                         active
@@ -175,7 +176,7 @@ const Edit: NextPage = () => {
                                 onClick={() => setIsDraft(true)}
                               >
                                 <div className="mr-1 w-5">
-                                  {isDraft && (
+                                  {isDraftRef.current && (
                                     <svg
                                       className={`${
                                         active
