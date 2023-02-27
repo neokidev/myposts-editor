@@ -3,6 +3,7 @@ import {
   type SubmitErrorHandler,
   type SubmitHandler,
   useForm,
+  useWatch,
 } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,6 +11,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Split from 'react-split'
+import { renderMarkdownContent } from '~/markdoc/utils'
 
 type FormValues = {
   title: string
@@ -27,13 +29,16 @@ const Edit: NextPage = () => {
   const [isDraft, setIsDraft] = useState(false)
   const isDraftRef = useRef(false)
 
-  const { register, handleSubmit } = useForm<FormValues>({
+  const { register, handleSubmit, control } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: '',
       content: '',
     },
   })
+
+  const content = useWatch({ control, name: 'content' })
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     alert(JSON.stringify(data))
   }
@@ -271,8 +276,9 @@ const Edit: NextPage = () => {
                         placeholder="Post content here..."
                         {...register('content')}
                       />
-                      {/*<div className="border border-red-500" />*/}
-                      <div className="w-full p-4">Markdown Preview</div>
+                      <div className="w-full p-4">
+                        {renderMarkdownContent(content)}
+                      </div>
                     </Split>
                   </div>
                 </div>
