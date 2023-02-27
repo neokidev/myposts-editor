@@ -234,7 +234,7 @@ const Edit: NextPage = () => {
               </div>
             </div>
           </header>
-          <div className="flex-1">
+          <div className="flex-1 overflow-hidden">
             <div className="mx-auto h-full max-w-7xl p-8">
               <div className="h-full overflow-hidden rounded-md border shadow-lg">
                 <div className="flex h-full flex-col space-y-6 bg-white p-6">
@@ -254,7 +254,7 @@ const Edit: NextPage = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-1 flex-col">
+                  <div className="flex flex-1 flex-col overflow-hidden">
                     <label
                       htmlFor="content"
                       className="block font-medium text-slate-600"
@@ -276,7 +276,7 @@ const Edit: NextPage = () => {
                         placeholder="Post content here..."
                         {...register('content')}
                       />
-                      <div className="w-full p-4">
+                      <div className="w-full overflow-scroll p-4">
                         <MarkdownRenderer content={content} />
                       </div>
                     </Split>
