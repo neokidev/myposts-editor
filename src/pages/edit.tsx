@@ -11,7 +11,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Split from 'react-split'
-import { renderMarkdownContent } from '~/markdoc/utils'
+import { MarkdownRenderer } from '~/components/Renderer'
 
 type FormValues = {
   title: string
@@ -277,7 +277,7 @@ const Edit: NextPage = () => {
                         {...register('content')}
                       />
                       <div className="w-full p-4">
-                        {renderMarkdownContent(content)}
+                        <MarkdownRenderer content={content} />
                       </div>
                     </Split>
                   </div>
