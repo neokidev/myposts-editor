@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+import Split from 'react-split'
 
 type FormValues = {
   title: string
@@ -255,13 +256,22 @@ const Edit: NextPage = () => {
                     >
                       Content
                     </label>
-                    <div className="mt-1 flex-1">
+                    <Split
+                      className="mt-1 flex flex-1 overflow-hidden rounded-md border border-slate-300"
+                      gutter={(index, direction) => {
+                        const gutter = document.createElement('div')
+                        gutter.className = `gutter gutter-${direction} bg-red-500 hover:cursor-col-resize`
+                        return gutter
+                      }}
+                    >
                       <textarea
-                        className="mt-1 block h-full w-full resize-none rounded-md border border-slate-300 p-4 shadow-sm outline-2 outline-blue-500 focus:border-blue-500 focus:ring-blue-500"
+                        className="block w-full resize-none rounded-l-md p-4 outline-2 outline-blue-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                         placeholder="Post content here..."
                         {...register('content')}
                       />
-                    </div>
+                      {/*<div className="border border-red-500" />*/}
+                      <div className="w-full p-4">Markdown Preview</div>
+                    </Split>
                   </div>
                 </div>
               </div>
