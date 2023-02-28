@@ -8,10 +8,11 @@ import {
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useCallback, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Split from 'react-split'
 import { MarkdownRenderer } from '~/components/Renderer'
+import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
 
 type FormValues = {
   title: string
@@ -28,6 +29,13 @@ const notify = () => toast.error("Title can't be blank")
 const Edit: NextPage = () => {
   const [isDraft, setIsDraft] = useState(false)
   const isDraftRef = useRef(false)
+  const [gutterIsActive, setGutterIsActive] = useState(false)
+
+  const handlePointerUp = useCallback(() => {
+    setGutterIsActive(false)
+  }, [])
+
+  useGlobalPointerUpEvent(handlePointerUp, gutterIsActive)
 
   const { register, handleSubmit, control } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -268,15 +276,24 @@ const Edit: NextPage = () => {
                         const gutter = document.createElement('div')
                         gutter.className =
                           'relative bg-slate-300 after:absolute after:-left-1 after:z-10 after:block after:h-full after:w-[9px] hover:cursor-col-resize hover:bg-blue-300 hover:ring-2 active:bg-blue-300 active:ring-2'
+                        gutter.addEventListener('pointerdown', () => {
+                          setGutterIsActive(true)
+                        })
                         return gutter
                       }}
                     >
                       <textarea
-                        className="block w-full resize-none rounded-l-md p-4 outline-none ring-0"
+                        className={`${
+                          gutterIsActive ? 'scrollbar-none' : ''
+                        } block w-full resize-none overflow-scroll rounded-l-md p-4 outline-none ring-0`}
                         placeholder="Post content here..."
                         {...register('content')}
                       />
-                      <div className="w-full overflow-scroll p-4">
+                      <div
+                        className={`${
+                          gutterIsActive ? 'scrollbar-none' : ''
+                        } w-full overflow-scroll p-4`}
+                      >
                         <MarkdownRenderer content={content} />
                       </div>
                     </Split>
