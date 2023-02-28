@@ -334,7 +334,7 @@ const Edit: NextPage = () => {
                     <RadioGroup
                       value={selected}
                       onChange={setSelected}
-                      className="flex space-x-2"
+                      className="mt-1 flex space-x-2 rounded-md px-1"
                     >
                       {Object.entries(contentIcons).map(([key, icon]) => (
                         <RadioGroup.Option
@@ -345,9 +345,9 @@ const Edit: NextPage = () => {
                   ${
                     checked
                       ? 'bg-[#0f83fd] bg-opacity-75 text-white'
-                      : 'bg-slate-100'
+                      : 'bg-white'
                   }
-                    flex cursor-pointer items-center justify-center rounded-md border border-slate-200 p-1.5 focus:outline-none`
+                    flex cursor-pointer items-center justify-center rounded-md p-1.5 shadow shadow-black/20 focus:outline-none`
                           }
                         >
                           {({ checked }) => (
