@@ -331,90 +331,88 @@ const Edit: NextPage = () => {
                     >
                       Content
                     </label>
-                    <div className="mt-1 flex flex-1 flex-col">
-                      <RadioGroup
-                        value={selected}
-                        onChange={setSelected}
-                        className="flex space-x-2"
-                      >
-                        {Object.entries(contentIcons).map(([key, icon]) => (
-                          <RadioGroup.Option
-                            key={key}
-                            value={key}
-                            className={({ active, checked }) =>
-                              `${active ? '' : ''}
+                    <RadioGroup
+                      value={selected}
+                      onChange={setSelected}
+                      className="flex space-x-2"
+                    >
+                      {Object.entries(contentIcons).map(([key, icon]) => (
+                        <RadioGroup.Option
+                          key={key}
+                          value={key}
+                          className={({ active, checked }) =>
+                            `${active ? '' : ''}
                   ${
                     checked
                       ? 'bg-[#0f83fd] bg-opacity-75 text-white'
                       : 'bg-slate-100'
                   }
                     flex cursor-pointer items-center justify-center rounded-md border border-slate-200 p-1.5 focus:outline-none`
-                            }
-                          >
-                            {({ checked }) => (
-                              <div
-                                className={`${
-                                  checked ? 'text-white' : 'text-slate-500'
-                                } flex h-5 w-5 items-center justify-center`}
-                              >
-                                {icon}
-                              </div>
-                            )}
-                          </RadioGroup.Option>
-                        ))}
-                      </RadioGroup>
+                          }
+                        >
+                          {({ checked }) => (
+                            <div
+                              className={`${
+                                checked ? 'text-white' : 'text-slate-500'
+                              } flex h-5 w-5 items-center justify-center`}
+                            >
+                              {icon}
+                            </div>
+                          )}
+                        </RadioGroup.Option>
+                      ))}
+                    </RadioGroup>
 
-                      {selected === 'edit' && (
+                    {selected === 'edit' && (
+                      <textarea
+                        className={`${
+                          gutterIsActive ? 'scrollbar-none' : ''
+                        } mt-2 block w-full flex-1 resize-none overflow-scroll rounded-md rounded-l-md border border-slate-300 p-4 outline-none ring-0`}
+                        placeholder="Post content here..."
+                        {...register('content')}
+                      />
+                    )}
+
+                    {selected === 'split' && (
+                      <Split
+                        className="relative mt-2 flex flex-1 overflow-hidden rounded-md border border-slate-300"
+                        gutterSize={1}
+                        gutter={() => {
+                          const gutter = document.createElement('div')
+                          gutter.className =
+                            'relative bg-slate-300 after:absolute after:-left-1 after:z-10 after:block after:h-full after:w-[9px] hover:cursor-col-resize hover:bg-blue-300 hover:ring-2 active:bg-blue-300 active:ring-2'
+                          gutter.addEventListener('pointerdown', () => {
+                            setGutterIsActive(true)
+                          })
+                          return gutter
+                        }}
+                      >
                         <textarea
                           className={`${
                             gutterIsActive ? 'scrollbar-none' : ''
-                          } mt-2 block w-full flex-1 resize-none overflow-scroll rounded-md rounded-l-md border border-slate-300 p-4 outline-none ring-0`}
+                          } block w-full resize-none overflow-scroll rounded-l-md p-4 outline-none ring-0`}
                           placeholder="Post content here..."
                           {...register('content')}
                         />
-                      )}
-
-                      {selected === 'split' && (
-                        <Split
-                          className="relative mt-2 flex flex-1 overflow-hidden rounded-md border border-slate-300"
-                          gutterSize={1}
-                          gutter={() => {
-                            const gutter = document.createElement('div')
-                            gutter.className =
-                              'relative bg-slate-300 after:absolute after:-left-1 after:z-10 after:block after:h-full after:w-[9px] hover:cursor-col-resize hover:bg-blue-300 hover:ring-2 active:bg-blue-300 active:ring-2'
-                            gutter.addEventListener('pointerdown', () => {
-                              setGutterIsActive(true)
-                            })
-                            return gutter
-                          }}
-                        >
-                          <textarea
-                            className={`${
-                              gutterIsActive ? 'scrollbar-none' : ''
-                            } block w-full resize-none overflow-scroll rounded-l-md p-4 outline-none ring-0`}
-                            placeholder="Post content here..."
-                            {...register('content')}
-                          />
-                          <div
-                            className={`${
-                              gutterIsActive ? 'scrollbar-none' : ''
-                            } w-full overflow-scroll p-4`}
-                          >
-                            <MarkdownRenderer content={content} />
-                          </div>
-                        </Split>
-                      )}
-
-                      {selected === 'preview' && (
                         <div
                           className={`${
                             gutterIsActive ? 'scrollbar-none' : ''
-                          } mt-2 w-full flex-1 overflow-scroll rounded-md border border-slate-300 p-4`}
+                          } w-full overflow-scroll p-4`}
                         >
                           <MarkdownRenderer content={content} />
                         </div>
-                      )}
-                    </div>
+                      </Split>
+                    )}
+
+                    {selected === 'preview' && (
+                      <div
+                        className={`${
+                          gutterIsActive ? 'scrollbar-none' : ''
+                        } mt-2 w-full flex-1 overflow-scroll rounded-md border border-slate-300 p-4`}
+                      >
+                        <MarkdownRenderer content={content} />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
