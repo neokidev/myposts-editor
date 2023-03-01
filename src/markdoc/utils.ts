@@ -3,6 +3,7 @@ import { config } from './config'
 import React from 'react'
 
 export const renderMarkdownContent = (content: string) => {
+  console.log('contentttt:', content)
   const ast = Markdoc.parse(content)
   const transformed = Markdoc.transform<Config>(ast, config)
   return Markdoc.renderers.react(transformed, React)
