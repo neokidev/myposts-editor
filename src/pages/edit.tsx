@@ -14,6 +14,7 @@ import Split from 'react-split'
 import { MarkdownRenderer } from '~/components/Renderer'
 import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
 import { SubmitButton } from '~/features/edit-post'
+import { useMutation } from 'urql'
 
 type ContentIconKey = 'edit' | 'split' | 'preview'
 const contentIcons: { [K in ContentIconKey]: JSX.Element } = {
@@ -88,9 +89,18 @@ const schema = z.object({
 
 const notify = () => toast.error("Title can't be blank")
 
+const CreatePostTestMutation = `
+  mutation {
+    createPost(createPostInput: {title: "createPost-test", content: "content", published: false}) {
+      id
+    }
+  }
+`
+
 const Edit: NextPage = () => {
   const [gutterIsActive, setGutterIsActive] = useState(false)
   const [selected, setSelected] = useState<ContentIconKey>('split')
+  const [createPostResult, createPost] = useMutation(CreatePostTestMutation)
 
   const handlePointerUp = useCallback(() => {
     setGutterIsActive(false)
@@ -108,8 +118,10 @@ const Edit: NextPage = () => {
 
   const content = useWatch({ control, name: 'content' })
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     alert(JSON.stringify(data))
+    const result = await createPost()
+    console.log("mutation result:", result)
   }
 
   const onError: SubmitErrorHandler<FormValues> = () => notify()
