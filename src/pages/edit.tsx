@@ -89,9 +89,9 @@ const schema = z.object({
 
 const notify = () => toast.error("Title can't be blank")
 
-const CreatePostTestMutation = `
-  mutation {
-    createPost(createPostInput: {title: "createPost-test", content: "content", published: false}) {
+const CreatePost = `
+  mutation ($title: String!, $content: String!, $published: Boolean! ) {
+    createPost(createPostInput: { title: $title, content: $content, published: $published }) {
       id
     }
   }
@@ -100,7 +100,6 @@ const CreatePostTestMutation = `
 const Edit: NextPage = () => {
   const [gutterIsActive, setGutterIsActive] = useState(false)
   const [selected, setSelected] = useState<ContentIconKey>('split')
-  const [createPostResult, createPost] = useMutation(CreatePostTestMutation)
 
   const handlePointerUp = useCallback(() => {
     setGutterIsActive(false)
@@ -117,11 +116,11 @@ const Edit: NextPage = () => {
   })
 
   const content = useWatch({ control, name: 'content' })
+  const [, createPost] = useMutation(CreatePost)
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    alert(JSON.stringify(data))
-    const result = await createPost()
-    console.log("mutation result:", result)
+  const onSubmit: SubmitHandler<FormValues> = async ({ title, content }) => {
+    const variables = { title, content, published: false }
+    await createPost(variables)
   }
 
   const onError: SubmitErrorHandler<FormValues> = () => notify()

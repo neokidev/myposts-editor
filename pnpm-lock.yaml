@@ -26,7 +26,7 @@ specifiers:
   next-auth: ^4.19.0
   next-urql: ^4.0.3
   postcss: ^8.4.14
-  prettier: ^2.8.1
+  prettier: ^2.8.4
   prettier-plugin-tailwindcss: ^0.2.1
   prisma: ^4.9.0
   react: 18.2.0
