@@ -1,11 +1,13 @@
-import { type NextPage } from 'next'
+import { type GetServerSideProps, type NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { api } from '~/utils/api'
+import { urqlClient } from '~/lib/urql'
+import { gql } from 'urql'
 
-const Home: NextPage = () => {
+const Home: NextPage<Props> = (props) => {
   const hello = api.example.hello.useQuery({ text: 'from tRPC' })
 
   return (
@@ -50,6 +52,15 @@ const Home: NextPage = () => {
             </p>
             <AuthShowcase />
           </div>
+          <div>
+            <ul className="text-white">
+            {props.posts.map((post) => (
+              <li key={post.id}>
+                ID: {post.id} Title: {post.title}
+              </li>
+            ))}
+              </ul>
+          </div>
         </div>
       </main>
     </>
@@ -80,4 +91,40 @@ const AuthShowcase: React.FC = () => {
       </button>
     </div>
   )
+}
+
+type Props = {
+  posts: {
+    id: string;
+    title: string;
+  }[];
+};
+
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  try {
+    const client = await urqlClient();
+
+    const postsQuery = gql`
+      query {
+        posts {
+          id
+          title
+        }
+      }
+    `
+    const result = await client.query(postsQuery, {}).toPromise()
+
+    return {
+      props: {
+        posts: result.data.posts
+      }
+    }
+
+  } catch (e) {
+    console.error(e)
+    return {
+      notFound: true
+    }
+  }
+  
 }
