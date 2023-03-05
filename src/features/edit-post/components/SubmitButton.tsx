@@ -1,5 +1,18 @@
-import { Menu, Transition } from '@headlessui/react'
-import { type FC, Fragment, useEffect, useRef, useState } from 'react'
+import { Menu, Portal, Transition } from '@headlessui/react'
+import {
+  type FC,
+  Fragment,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import {
+  useBoundingclientrect,
+  useBoundingclientrectRef,
+  useWindowSize,
+} from 'rooks'
+import { type Rect, useRect } from 'react-use-rect'
 
 type Props = {
   published?: boolean
@@ -9,13 +22,26 @@ type Props = {
 export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
   const [published_, setPublished] = useState(published ?? true)
   const publishedRef = useRef(published ?? true)
+  const windowSize = useWindowSize()
+  const portalTransformCSSRef = useRef('')
+  const [buttonRect, setButtonRect] = useState<Rect | null>(null)
+  const [buttonRef] = useRect(setButtonRect)
+
+  useEffect(() => {
+    if (buttonRect) {
+      const { right, top, height } = buttonRect
+      portalTransformCSSRef.current = `translate(-${
+        (windowSize.innerWidth ?? 0) - right
+      }px, ${top + height}px)`
+    }
+  }, [buttonRect, windowSize])
 
   useEffect(() => {
     published && setPublished(published)
   }, [published])
 
   return (
-    <div className="relative flex text-right">
+    <div ref={buttonRef} className="relative inline-flex text-right">
       <button
         type="submit"
         className="inline-flex justify-center rounded-none rounded-l-md border-r border-blue-600 bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
@@ -26,7 +52,7 @@ export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
       <Menu>
         <Menu.Button
           type="button"
-          className="inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+          className="relative inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
         >
           <svg
             aria-hidden="true"
@@ -54,106 +80,115 @@ export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
           leaveTo="transform opacity-0 scale-95"
           afterLeave={() => (publishedRef.current = published_)}
         >
-          <Menu.Items className="absolute right-0 top-9 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  type="button"
-                  className={`${
-                    active ? 'bg-blue-500' : ''
-                  } group flex w-full rounded-t-md p-3 text-start`}
-                  onClick={() => {
-                    const published = true
-                    setPublished(published)
-                    onChangePublished && onChangePublished(published)
-                  }}
-                >
-                  <div className="w-5">
-                    {publishedRef.current && (
-                      <svg
-                        className={`${
-                          active ? 'stroke-white' : 'stroke-blue-500'
-                        } stroke-2`}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M5 12l5 5l10 -10" />
-                      </svg>
-                    )}
-                  </div>
-
-                  <div className="ml-2 flex-1">
-                    <h5
-                      className={`${
-                        active ? 'bg-blue-500 text-white' : 'text-slate-600'
-                      } text-sm font-medium`}
-                    >
-                      Publish
-                    </h5>
-                    <div
-                      className={`${
-                        active ? 'text-blue-200' : 'text-slate-400'
-                      } mt-0.5 text-[13px] font-light`}
-                    >
-                      This post can be viewed by anyone
+          <Portal
+            as="div"
+            className="absolute z-10"
+            style={{
+              inset: '0px 0px auto auto',
+              transform: portalTransformCSSRef.current,
+            }}
+          >
+            <Menu.Items className="mt-2 w-80 divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    type="button"
+                    className={`${
+                      active ? 'bg-blue-500' : ''
+                    } group flex w-full rounded-t-md p-3 text-start`}
+                    onClick={() => {
+                      const published = true
+                      setPublished(published)
+                      onChangePublished && onChangePublished(published)
+                    }}
+                  >
+                    <div className="w-5">
+                      {publishedRef.current && (
+                        <svg
+                          className={`${
+                            active ? 'stroke-white' : 'stroke-blue-500'
+                          } stroke-2`}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M5 12l5 5l10 -10" />
+                        </svg>
+                      )}
                     </div>
-                  </div>
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  type="button"
-                  className={`${
-                    active ? 'bg-blue-500' : ''
-                  } group flex w-full rounded-b-md p-3 text-start`}
-                  onClick={() => {
-                    const published = false
-                    setPublished(published)
-                    onChangePublished && onChangePublished(published)
-                  }}
-                >
-                  <div className="w-5">
-                    {!publishedRef.current && (
-                      <svg
-                        className={`${
-                          active ? 'stroke-white' : 'stroke-blue-500'
-                        } stroke-2`}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M5 12l5 5l10 -10" />
-                      </svg>
-                    )}
-                  </div>
 
-                  <div className="ml-2 flex-1">
-                    <h5
-                      className={`${
-                        active ? 'bg-blue-500 text-white' : 'text-slate-600'
-                      } text-sm font-medium`}
-                    >
-                      Draft
-                    </h5>
-                    <div
-                      className={`${
-                        active ? 'text-blue-200' : 'text-slate-400'
-                      } mt-0.5 text-[13px] font-light`}
-                    >
-                      This post will not be publicly accessible
+                    <div className="ml-2 flex-1">
+                      <h5
+                        className={`${
+                          active ? 'bg-blue-500 text-white' : 'text-slate-600'
+                        } text-sm font-medium`}
+                      >
+                        Publish
+                      </h5>
+                      <div
+                        className={`${
+                          active ? 'text-blue-200' : 'text-slate-400'
+                        } mt-0.5 text-[13px] font-light`}
+                      >
+                        This post can be viewed by anyone
+                      </div>
                     </div>
-                  </div>
-                </button>
-              )}
-            </Menu.Item>
-          </Menu.Items>
+                  </button>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    type="button"
+                    className={`${
+                      active ? 'bg-blue-500' : ''
+                    } group flex w-full rounded-b-md p-3 text-start`}
+                    onClick={() => {
+                      const published = false
+                      setPublished(published)
+                      onChangePublished && onChangePublished(published)
+                    }}
+                  >
+                    <div className="w-5">
+                      {!publishedRef.current && (
+                        <svg
+                          className={`${
+                            active ? 'stroke-white' : 'stroke-blue-500'
+                          } stroke-2`}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M5 12l5 5l10 -10" />
+                        </svg>
+                      )}
+                    </div>
+
+                    <div className="ml-2 flex-1">
+                      <h5
+                        className={`${
+                          active ? 'bg-blue-500 text-white' : 'text-slate-600'
+                        } text-sm font-medium`}
+                      >
+                        Draft
+                      </h5>
+                      <div
+                        className={`${
+                          active ? 'text-blue-200' : 'text-slate-400'
+                        } mt-0.5 text-[13px] font-light`}
+                      >
+                        This post will not be publicly accessible
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </Menu.Item>
+            </Menu.Items>
+          </Portal>
         </Transition>
       </Menu>
     </div>

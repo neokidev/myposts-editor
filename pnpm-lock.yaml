@@ -46,6 +46,8 @@ specifiers:
   react-hot-toast: ^2.4.0
   react-is: ^18.2.0
   react-split: ^2.0.14
+  react-use-rect: ^2.0.4
+  rooks: ^7.4.4
   storybook: ^7.0.0-beta.61
   style-loader: ^3.3.1
   superjson: 1.9.1
@@ -75,6 +77,8 @@ dependencies:
   react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
   react-is: 18.2.0
   react-split: 2.0.14_react@18.2.0
+  react-use-rect: 2.0.4_react@18.2.0
+  rooks: 7.4.4_biqbaboplfbrettd7655fr4n2y
   superjson: 1.9.1
   urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
   zod: 3.20.6
@@ -8348,7 +8352,6 @@ packages:
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
-    dev: true
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -9077,6 +9080,10 @@ packages:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
     dev: true
 
+  /performance-now/2.1.0:
+    resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
+    dev: false
+
   /picocolors/0.2.1:
     resolution: {integrity: sha512-cMlDqaLEqfSaW8Z7N5Jw+lyIW869EzT73/F5lhtY9cLGoVxSXznfgfXMO0Z5K0o0Q2TkTXq+0KFsdnSe3jDViA==}
     dev: true
@@ -9555,6 +9562,12 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /raf/3.4.1:
+    resolution: {integrity: sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==}
+    dependencies:
+      performance-now: 2.1.0
+    dev: false
+
   /ramda/0.28.0:
     resolution: {integrity: sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==}
     dev: true
@@ -9704,6 +9717,14 @@ packages:
     resolution: {integrity: sha512-yFNHrlVEReVYKsLI5lF05tZoHveA5pGzjFbFJY/3pOqqjGOmMmqx83N4hIjN2n6E1AOa+eQEUxs3CgRnPmT0RQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-use-rect/2.0.4_react@18.2.0:
+    resolution: {integrity: sha512-U0MyT5le01P83t/G37t+Z36lafKEl5icCM1M9V4ubt5+kgczllyd5xWNH4Ahxn+CzMs6mnTypZ+XwpFbE045XA==}
+    peerDependencies:
+      react: ^17.0.2 || ^18.0.0
     dependencies:
       react: 18.2.0
     dev: false
@@ -9964,6 +9985,19 @@ packages:
     dependencies:
       glob: 7.2.3
     dev: true
+
+  /rooks/7.4.4_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-duwW4WIM1hz+OZeGuirqKai/2E5xLNhmU6j6xj+1/bCeauJL4j0jIoerkeCmWcekFNpX3uWYz/QFHtwuP5AfZQ==}
+    engines: {node: '>=v10.24.1'}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
+    dependencies:
+      lodash.debounce: 4.0.8
+      raf: 3.4.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /run-parallel/1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}

@@ -11,6 +11,18 @@ const meta: Meta<typeof SubmitButton> = {
 export default meta
 type Story = StoryObj<typeof SubmitButton>
 
-export const Default: Story = {
+export const Left: Story = {
   args: {},
 }
+
+export const Right: Story = {
+  args: {},
+}
+
+Right.decorators = [
+  (Story) => (
+    <div className="text-right">
+      <Story />
+    </div>
+  ),
+]
