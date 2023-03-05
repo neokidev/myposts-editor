@@ -8,10 +8,10 @@ type Props = {
 
 export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
   const [published_, setPublished] = useState(published ?? true)
-  const publishedRef = useRef(true)
+  const publishedRef = useRef(published ?? true)
 
   useEffect(() => {
-    published && setPublished(published)
+    published !== undefined && setPublished(published)
   }, [published])
 
   return (
