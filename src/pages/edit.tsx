@@ -8,7 +8,7 @@ import {
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RadioGroup } from '@headlessui/react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Split from 'react-split'
 import { MarkdownRenderer } from '~/components/Renderer'
@@ -100,6 +100,7 @@ const CreatePost = `
 const Edit: NextPage = () => {
   const [gutterIsActive, setGutterIsActive] = useState(false)
   const [selected, setSelected] = useState<ContentIconKey>('split')
+  const [published, setPublished] = useState(true)
 
   const handlePointerUp = useCallback(() => {
     setGutterIsActive(false)
@@ -119,7 +120,7 @@ const Edit: NextPage = () => {
   const [, createPost] = useMutation(CreatePost)
 
   const onSubmit: SubmitHandler<FormValues> = async ({ title, content }) => {
-    const variables = { title, content, published: false }
+    const variables = { title, content, published }
     await createPost(variables)
   }
 
@@ -156,7 +157,10 @@ const Edit: NextPage = () => {
               <div className="flex items-center justify-center"></div>
               <div className="flex items-center justify-end">
                 <div className="flex rounded-md shadow-sm">
-                  <SubmitButton />
+                  <SubmitButton
+                    published={published}
+                    onChangePublished={setPublished}
+                  />
                 </div>
               </div>
             </div>
