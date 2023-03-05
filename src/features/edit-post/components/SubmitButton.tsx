@@ -8,10 +8,10 @@ type Props = {
 
 export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
   const [published_, setPublished] = useState(published ?? true)
-  const publishedRef = useRef(true)
+  const publishedRef = useRef(published ?? true)
 
   useEffect(() => {
-    published && setPublished(published)
+    published !== undefined && setPublished(published)
   }, [published])
 
   return (
@@ -62,7 +62,10 @@ export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
                   className={`${
                     active ? 'bg-blue-500' : ''
                   } group flex w-full rounded-t-md p-3 text-start`}
-                  onClick={() => setPublished(true)}
+                  onClick={() => {
+                    setPublished(true)
+                    onChangePublished && onChangePublished(true)
+                  }}
                 >
                   <div className="w-5">
                     {publishedRef.current && (
@@ -107,7 +110,10 @@ export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
                   className={`${
                     active ? 'bg-blue-500' : ''
                   } group flex w-full rounded-b-md p-3 text-start`}
-                  onClick={() => setPublished(false)}
+                  onClick={() => {
+                    setPublished(false)
+                    onChangePublished && onChangePublished(false)
+                  }}
                 >
                   <div className="w-5">
                     {!publishedRef.current && (
