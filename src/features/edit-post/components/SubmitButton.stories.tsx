@@ -17,8 +17,10 @@ export const Default: Story = {
 
 Default.decorators = [
   (Story) => (
-    <div className="mb-36 text-center">
-      <Story />
+    <div className="mb-36 flex justify-center">
+      <div className="flex w-[7.125rem] justify-end">
+        <Story />
+      </div>
     </div>
   ),
 ]
