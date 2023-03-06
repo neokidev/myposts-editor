@@ -24,3 +24,31 @@ Default.decorators = [
     </div>
   ),
 ]
+
+export const DraftMode: Story = {
+  args: { published: false },
+}
+
+DraftMode.decorators = [
+  (Story) => (
+    <div className="mb-36 flex justify-center">
+      <div className="flex w-[7.125rem] justify-end">
+        <Story />
+      </div>
+    </div>
+  ),
+]
+
+export const Disabled: Story = {
+  args: { disabled: true },
+}
+
+Disabled.decorators = [
+  (Story) => (
+    <div className="flex justify-center">
+      <div className="flex w-[7.125rem] justify-end">
+        <Story />
+      </div>
+    </div>
+  ),
+]

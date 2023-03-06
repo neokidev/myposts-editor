@@ -2,11 +2,16 @@ import { Menu, Transition } from '@headlessui/react'
 import { type FC, Fragment, useEffect, useRef, useState } from 'react'
 
 type Props = {
+  disabled?: boolean
   published?: boolean
   onChangePublished?: (published: boolean) => void
 }
 
-export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
+export const SubmitButton: FC<Props> = ({
+  disabled,
+  published,
+  onChangePublished,
+}) => {
   const [published_, setPublished] = useState(published ?? true)
   const publishedRef = useRef(published ?? true)
 
@@ -18,7 +23,8 @@ export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
     <div className="relative inline-flex text-right">
       <button
         type="submit"
-        className="inline-flex justify-center rounded-none rounded-l-md border-r border-blue-600 bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+        disabled={disabled}
+        className="inline-flex justify-center rounded-none rounded-l-md border-r border-blue-600 bg-blue-500 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 enabled:hover:bg-blue-600 disabled:border-blue-600/30 disabled:bg-blue-500/70"
       >
         {published_ ? 'Publish' : 'Draft'}
       </button>
@@ -26,7 +32,8 @@ export const SubmitButton: FC<Props> = ({ published, onChangePublished }) => {
       <Menu>
         <Menu.Button
           type="button"
-          className="inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+          disabled={disabled}
+          className="inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 text-white focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 enabled:hover:bg-blue-600 disabled:bg-blue-500/70"
         >
           <svg
             aria-hidden="true"
