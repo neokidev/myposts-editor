@@ -34,6 +34,7 @@ export const SubmitButton: FC<Props> = ({
           type="button"
           disabled={disabled}
           className="inline-flex items-center justify-center rounded-none rounded-r-md bg-blue-500 px-3 text-white focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 enabled:hover:bg-blue-600 disabled:bg-blue-500/70"
+          data-testid="menu-open-button"
         >
           <svg
             aria-hidden="true"
@@ -61,7 +62,10 @@ export const SubmitButton: FC<Props> = ({
           leaveTo="transform opacity-0 scale-95"
           afterLeave={() => (publishedRef.current = published_)}
         >
-          <Menu.Items className="absolute right-0 top-9 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items
+            className="absolute right-0 top-9 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-black/25 ring-1 ring-black ring-opacity-5 focus:outline-none"
+            data-testid="menu"
+          >
             <Menu.Item>
               {({ active }) => (
                 <button
