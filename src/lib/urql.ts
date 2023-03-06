@@ -1,7 +1,9 @@
-import { initUrqlClient } from 'next-urql';
-import { type Client } from 'urql';
+import { initUrqlClient } from 'next-urql'
+import { type Client } from 'urql'
 
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT!;
+// TODO: Validate this env variable
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT!
 
 export function urqlClient(): Promise<Client> {
   return new Promise((resolve, reject) => {
@@ -9,12 +11,12 @@ export function urqlClient(): Promise<Client> {
       {
         url: GRAPHQL_ENDPOINT,
       },
-      false,
-    );
+      false
+    )
     if (!client) {
-      reject(Error('Failed to init initUrqlClient.'));
+      reject(Error('Failed to init initUrqlClient.'))
     } else {
-      resolve(client);
+      resolve(client)
     }
-  });
+  })
 }

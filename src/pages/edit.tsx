@@ -8,7 +8,7 @@ import {
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RadioGroup } from '@headlessui/react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Split from 'react-split'
 import { MarkdownRenderer } from '~/components/Renderer'
