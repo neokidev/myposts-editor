@@ -41,16 +41,16 @@ DraftMode.decorators = [
   ),
 ]
 
-export const MenuIsOpened: Story = {
+export const OpenMenu: Story = {
   args: {},
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const button = canvas.getByTestId('menu-open-button')
+    const button = canvas.getByTestId('menu-button')
     await Promise.resolve(userEvent.click(button))
   },
 }
 
-MenuIsOpened.decorators = [
+OpenMenu.decorators = [
   (Story) => (
     <div className="mb-36 flex justify-center">
       <div className="flex w-[7.125rem] justify-end">

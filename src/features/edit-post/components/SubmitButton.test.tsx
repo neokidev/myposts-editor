@@ -1,87 +1,72 @@
 import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import * as SubmitButtonStories from './SubmitButton.stories'
-import { composeStories } from '@storybook/react'
+import { SubmitButton } from './SubmitButton'
 
-const { Default, MenuIsOpened, Disabled } = composeStories(SubmitButtonStories)
 const user = userEvent.setup()
 
 afterEach(cleanup)
 
-test('use property to control whether to publish or draft', async () => {
-  const { rerender } = render(<Default published />)
+test('use property to control whether to publish or draft', () => {
+  const { rerender } = render(<SubmitButton published />)
 
   const saveButton = screen.getByTestId('save-button')
   expect(saveButton.textContent).toEqual('Publish')
 
-  rerender(<Default published={false} />)
+  rerender(<SubmitButton published={false} />)
   expect(saveButton.textContent).toEqual('Draft')
-
-  return Promise.resolve()
 })
 
-test('`Publish` is displayed when publish is selected in the menu', async () => {
+test('toggle between publish and draft in the menu', async () => {
   // ARRANGE
-  const { container } = render(<MenuIsOpened published={false} />)
-  // eslint-disable-next-line
-  // @ts-ignore
-  await MenuIsOpened.play?.({ canvasElement: container })
+  render(<SubmitButton published />)
 
   const saveButton = screen.getByTestId('save-button')
-  expect(saveButton.textContent).toEqual('Draft')
+  const menuButton = screen.getByTestId('menu-button')
 
-  // ACT
-  await user.click(screen.getByTestId('menu-item-publish'))
-
-  // ASSERT
-  expect(saveButton.textContent).toEqual('Publish')
-})
-
-test('`Draft` is displayed when draft is selected in the menu', async () => {
-  // ARRANGE
-  const { container } = render(<MenuIsOpened published />)
-  // eslint-disable-next-line
-  // @ts-ignore
-  await MenuIsOpened.play?.({ canvasElement: container })
-
-  const saveButton = screen.getByTestId('save-button')
   expect(saveButton.textContent).toEqual('Publish')
 
-  // ACT
+  await user.click(menuButton)
+  screen.getByTestId('check-icon-publish')
+
   await user.click(screen.getByTestId('menu-item-draft'))
-
-  // ASSERT
   expect(saveButton.textContent).toEqual('Draft')
+
+  await user.click(menuButton)
+  screen.getByTestId('check-icon-draft')
+
+  await user.click(screen.getByTestId('menu-item-publish'))
+  expect(saveButton.textContent).toEqual('Publish')
+
+  await user.click(menuButton)
+  screen.getByTestId('check-icon-publish')
 })
 
 test('execute any function when selecting the menu item', async () => {
-  // ARRANGE
   const mockFn = vi.fn()
-  const { container } = render(<MenuIsOpened onChangePublished={mockFn} />)
-  // eslint-disable-next-line
-  // @ts-ignore
-  await MenuIsOpened.play?.({ canvasElement: container })
+  render(<SubmitButton published onChangePublished={mockFn} />)
+
+  const menuButton = screen.getByTestId('menu-button')
 
   expect(mockFn).toBeCalledTimes(0)
 
-  // ACT
-  await user.click(screen.getByTestId('menu-item-publish'))
+  await user.click(menuButton)
+  await user.click(screen.getByTestId('menu-item-draft'))
 
-  // ASSERT
+  expect(mockFn).toBeCalledTimes(1)
+
+  await user.click(menuButton)
+  await user.click(screen.getByTestId('menu-item-draft'))
+
   expect(mockFn).toBeCalledTimes(1)
 })
 
-test('button is disabled', async () => {
-  // ARRANGE
-  render(<Disabled />)
+test('button is disabled', () => {
+  render(<SubmitButton disabled />)
 
   const saveButton = screen.getByTestId('save-button')
-  const menuOpenButton = screen.getByTestId('menu-open-button')
+  const menuOpenButton = screen.getByTestId('menu-button')
 
-  // ASSERT
   expect((saveButton as HTMLButtonElement).disabled).toBeTruthy()
   expect((menuOpenButton as HTMLButtonElement).disabled).toBeTruthy()
-
-  return Promise.resolve()
 })
