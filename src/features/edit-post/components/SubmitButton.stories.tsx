@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { SubmitButton } from './SubmitButton'
+import { within } from '@storybook/testing-library'
+import { userEvent } from '@storybook/testing-library'
 
 const meta: Meta<typeof SubmitButton> = {
   title: 'Features/EditPost/SubmitButton',
@@ -30,6 +32,25 @@ export const DraftMode: Story = {
 }
 
 DraftMode.decorators = [
+  (Story) => (
+    <div className="mb-36 flex justify-center">
+      <div className="flex w-[7.125rem] justify-end">
+        <Story />
+      </div>
+    </div>
+  ),
+]
+
+export const MenuIsOpened: Story = {
+  args: {},
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByTestId('menu-open-button')
+    await Promise.resolve(userEvent.click(button))
+  },
+}
+
+MenuIsOpened.decorators = [
   (Story) => (
     <div className="mb-36 flex justify-center">
       <div className="flex w-[7.125rem] justify-end">
