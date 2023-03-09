@@ -23,7 +23,8 @@ const posts: Post[] = [
   },
   {
     id: '3',
-    title: 'Post 3',
+    title:
+      'Post 3 (long title, long title, long title, long title, long title,long title)',
     content: 'Test content',
     published: true,
     publishedAt: dayjs().subtract(4, 'day').toDate(),
