@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { PostCard } from './PostCard'
 import { type Post } from '../types/post'
 import dayjs from 'dayjs'
+import { userEvent, within } from '@storybook/testing-library'
 
 const post: Post = {
   id: '1',
@@ -29,4 +30,13 @@ export const PublishedPost: Story = {
 
 export const DraftPost: Story = {
   args: { post: { ...post, published: false } },
+}
+
+export const OpenDetailMenu: Story = {
+  args: { post },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const detailButton = canvas.getByRole('button', { name: 'detail' })
+    await Promise.resolve(userEvent.click(detailButton))
+  },
 }
