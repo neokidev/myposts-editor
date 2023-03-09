@@ -1,9 +1,10 @@
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useCallback } from 'react'
 import { type Post } from '../types/post'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { IconAlertCircle, IconDots, IconPencil } from '@tabler/icons-react'
 import { Menu } from '@headlessui/react'
+import Link from 'next/link'
 
 dayjs.extend(relativeTime)
 
@@ -18,19 +19,12 @@ const DraftBadge = () => {
   )
 }
 
-type ButtonProps = {
-  children: ReactNode
-}
-
-const Button: FC<ButtonProps> = ({ children }) => {
-  return <button className={buttonClassName}>{children}</button>
-}
-
 type DetailButtonProps = {
   children: ReactNode
+  deletePost: () => void
 }
 
-const DetailButton: FC<DetailButtonProps> = ({ children }) => {
+const DetailButton: FC<DetailButtonProps> = ({ children, deletePost }) => {
   return (
     <Menu as="div" className="relative">
       <Menu.Button className={buttonClassName} aria-label="detail">
@@ -41,6 +35,7 @@ const DetailButton: FC<DetailButtonProps> = ({ children }) => {
           <Menu.Item>
             {({ active }) => (
               <button
+                onClick={deletePost}
                 className={`${
                   active ? 'bg-red-50' : ''
                 } group flex w-full items-center rounded-md p-2 text-sm font-medium text-red-500`}
@@ -61,9 +56,17 @@ const DetailButton: FC<DetailButtonProps> = ({ children }) => {
 
 type PostCardProps = {
   post: Post
+  editPageHref: string
+  onDelete: (post: Post) => void
 }
 
-export const PostCard: FC<PostCardProps> = ({ post }) => {
+export const PostCard: FC<PostCardProps> = ({
+  post,
+  editPageHref,
+  onDelete,
+}) => {
+  const deletePost = useCallback(() => onDelete(post), [post, onDelete])
+
   return (
     <div className="flex items-center rounded-lg border bg-white px-6 py-4">
       <div className="min-w-0 flex-1 space-y-1 pr-4">
@@ -78,10 +81,10 @@ export const PostCard: FC<PostCardProps> = ({ post }) => {
         </div>
       </div>
       <div className="col-span-1 flex items-center justify-center space-x-2">
-        <Button>
+        <Link href={editPageHref} className={buttonClassName}>
           <IconPencil className="h-4 w-4" />
-        </Button>
-        <DetailButton>
+        </Link>
+        <DetailButton deletePost={deletePost}>
           <IconDots className="h-4 w-4" />
         </DetailButton>
       </div>
