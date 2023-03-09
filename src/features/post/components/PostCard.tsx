@@ -19,7 +19,7 @@ type PostCardProps = {
 
 export const PostCard: FC<PostCardProps> = ({ post }) => {
   return (
-    <div className="space-y-1 rounded-xl border px-6 py-4">
+    <div className="space-y-1 rounded-lg border px-6 py-4">
       <div className="flex items-center space-x-1">
         <h5 className="text-xl font-bold text-slate-700">{post.title}</h5>
         <div className="pb-0.5">{!post.published && <DraftBadge />}</div>
