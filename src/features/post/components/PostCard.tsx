@@ -2,9 +2,13 @@ import { type FC, type ReactNode } from 'react'
 import { type Post } from '../types/post'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { IconDots, IconPencil } from '@tabler/icons-react'
+import { IconAlertCircle, IconDots, IconPencil } from '@tabler/icons-react'
+import { Menu } from '@headlessui/react'
 
 dayjs.extend(relativeTime)
+
+const buttonClassName =
+  'flex items-center rounded-lg border border-slate-200 bg-white p-2 text-xs font-medium text-slate-400 shadow-sm hover:bg-slate-50 hover:text-slate-500 focus:z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 '
 
 const DraftBadge = () => {
   return (
@@ -19,12 +23,37 @@ type ButtonProps = {
 }
 
 const Button: FC<ButtonProps> = ({ children }) => {
+  return <button className={buttonClassName}>{children}</button>
+}
+
+type DetailButtonProps = {
+  children: ReactNode
+}
+
+const DetailButton: FC<DetailButtonProps> = ({ children }) => {
   return (
-    <>
-      <button className="flex items-center rounded-lg border border-slate-200 bg-white p-2 text-xs font-medium text-slate-500 shadow-sm hover:bg-slate-50 hover:text-sky-600 focus:z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 ">
-        {children}
-      </button>
-    </>
+    <Menu as="div" className="relative">
+      <Menu.Button className={buttonClassName}>{children}</Menu.Button>
+      <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div className="p-1">
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                className={`${
+                  active ? 'bg-red-50' : ''
+                } group flex w-full items-center rounded-md p-2 text-sm font-medium text-red-500`}
+              >
+                <IconAlertCircle
+                  className="mr-1.5 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Delete this post
+              </button>
+            )}
+          </Menu.Item>
+        </div>
+      </Menu.Items>
+    </Menu>
   )
 }
 
@@ -46,14 +75,13 @@ export const PostCard: FC<PostCardProps> = ({ post }) => {
           updated {dayjs(post.updatedAt).fromNow()}
         </div>
       </div>
-
       <div className="col-span-1 flex items-center justify-center space-x-2">
         <Button>
           <IconPencil className="h-4 w-4" />
         </Button>
-        <Button>
+        <DetailButton>
           <IconDots className="h-4 w-4" />
-        </Button>
+        </DetailButton>
       </div>
     </div>
   )
