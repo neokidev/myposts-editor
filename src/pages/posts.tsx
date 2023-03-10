@@ -3,6 +3,12 @@ import { type Post } from '~/features/post/types/post'
 import dayjs from 'dayjs'
 import { PostCard } from '~/features/post'
 import { useCallback } from 'react'
+import Link from 'next/link'
+import { SubmitButton } from '~/features/edit-post'
+import { RadioGroup } from '@headlessui/react'
+import Split from 'react-split'
+import { MarkdownRenderer } from '~/components/Renderer'
+import { Toaster } from 'react-hot-toast'
 
 const posts: Post[] = [
   {
@@ -40,15 +46,28 @@ const Posts: NextPage = () => {
   }, [])
 
   return (
-    <div className="space-y-1">
-      {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          editPageHref="/edit"
-          onDelete={handleDelete}
-        />
-      ))}
+    <div>
+      <div className="flex h-screen flex-col bg-blue-50">
+        <div className="flex-1 overflow-hidden">
+          <div className="mx-auto h-full max-w-7xl p-8">
+            <div className="h-full overflow-hidden rounded-md border bg-white p-8 shadow-lg">
+              <div className="mb-8 flex items-center justify-center">
+                <h5 className="text-3xl font-bold text-slate-700">Posts</h5>
+              </div>
+              <div className="space-y-2">
+                {posts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    editPageHref="/edit"
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
