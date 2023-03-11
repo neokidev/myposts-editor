@@ -135,18 +135,50 @@ export type UserCount = {
 export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: string, title: string }> };
+export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string }> };
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  content: Scalars['String'];
+  published: Scalars['Boolean'];
+}>;
 
 
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string } };
+
+export type PostDataFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string };
+
+export const PostDataFragmentDoc = gql`
+    fragment PostData on Post {
+  id
+  createdAt
+  updatedAt
+  published
+  title
+  content
+}
+    `;
 export const GetPostsDocument = gql`
     query GetPosts {
   posts {
-    id
-    title
+    ...PostData
   }
 }
-    `;
+    ${PostDataFragmentDoc}`;
 
 export function useGetPostsQuery(options?: Omit<Urql.UseQueryArgs<GetPostsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetPostsQuery, GetPostsQueryVariables>({ query: GetPostsDocument, ...options });
+};
+export const CreatePostDocument = gql`
+    mutation CreatePost($title: String!, $content: String!, $published: Boolean!) {
+  createPost(
+    createPostInput: {title: $title, content: $content, published: $published}
+  ) {
+    ...PostData
+  }
+}
+    ${PostDataFragmentDoc}`;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
 };

@@ -14,8 +14,9 @@ import Split from 'react-split'
 import { MarkdownRenderer } from '~/components/Renderer'
 import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
 import { SubmitButton } from '~/features/edit-post'
-import { useMutation } from 'urql'
 import Link from 'next/link'
+import { useCreatePostMutation } from '~/generated/graphql'
+import { useRouter } from 'next/router'
 
 type ContentIconKey = 'edit' | 'split' | 'preview'
 const contentIcons: { [K in ContentIconKey]: JSX.Element } = {
@@ -90,18 +91,12 @@ const schema = z.object({
 
 const notify = () => toast.error("Title can't be blank")
 
-const CreatePost = `
-  mutation ($title: String!, $content: String!, $published: Boolean! ) {
-    createPost(createPostInput: { title: $title, content: $content, published: $published }) {
-      id
-    }
-  }
-`
-
 const Edit: NextPage = () => {
   const [gutterIsActive, setGutterIsActive] = useState(false)
   const [selected, setSelected] = useState<ContentIconKey>('split')
   const [published, setPublished] = useState(true)
+  const [creatingPost, setCreatingPost] = useState(false)
+  const router = useRouter()
 
   const handlePointerUp = useCallback(() => {
     setGutterIsActive(false)
@@ -118,11 +113,13 @@ const Edit: NextPage = () => {
   })
 
   const content = useWatch({ control, name: 'content' })
-  const [, createPost] = useMutation(CreatePost)
+  const [, createPost] = useCreatePostMutation()
 
   const onSubmit: SubmitHandler<FormValues> = async ({ title, content }) => {
+    setCreatingPost(true)
     const variables = { title, content, published }
     await createPost(variables)
+    await router.push('/posts')
   }
 
   const onError: SubmitErrorHandler<FormValues> = () => notify()
@@ -159,6 +156,7 @@ const Edit: NextPage = () => {
               <div className="flex items-center justify-end">
                 <div className="flex rounded-md shadow-sm">
                   <SubmitButton
+                    disabled={creatingPost}
                     published={published}
                     onChangePublished={setPublished}
                   />

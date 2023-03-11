@@ -1,0 +1,20 @@
+query GetPosts {
+    posts {
+        ...PostData
+    }
+}
+
+mutation CreatePost ($title: String!, $content: String!, $published: Boolean!) {
+    createPost(createPostInput: { title: $title, content: $content, published: $published }) {
+        ...PostData
+    }
+}
+
+fragment PostData on Post {
+    id
+    createdAt
+    updatedAt
+    published
+    title
+    content
+}
