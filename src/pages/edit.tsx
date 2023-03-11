@@ -15,6 +15,7 @@ import { MarkdownRenderer } from '~/components/Renderer'
 import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
 import { SubmitButton } from '~/features/edit-post'
 import { useMutation } from 'urql'
+import Link from 'next/link'
 
 type ContentIconKey = 'edit' | 'split' | 'preview'
 const contentIcons: { [K in ContentIconKey]: JSX.Element } = {
@@ -134,9 +135,9 @@ const Edit: NextPage = () => {
           <header className="h-16 border-b bg-white shadow-md shadow-slate-200/50">
             <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-3 items-center px-8">
               <div className="flex items-center justify-start">
-                <a
+                <Link
                   className="group flex text-sm font-medium leading-6 text-slate-500 hover:text-slate-600"
-                  href="#"
+                  href="/posts"
                 >
                   <svg
                     viewBox="0 -9 3 24"
@@ -152,7 +153,7 @@ const Edit: NextPage = () => {
                     ></path>
                   </svg>
                   Go back
-                </a>
+                </Link>
               </div>
               <div className="flex items-center justify-center"></div>
               <div className="flex items-center justify-end">
