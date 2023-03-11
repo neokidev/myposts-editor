@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { api } from '~/utils/api'
+import { useGetPostsQuery } from '~/generated/graphql'
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: 'from tRPC' })
@@ -65,6 +66,9 @@ const AuthShowcase: React.FC = () => {
     { enabled: sessionData?.user !== undefined }
   )
 
+  const [result] = useGetPostsQuery()
+  const { data: posts } = result
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
@@ -77,6 +81,14 @@ const AuthShowcase: React.FC = () => {
       >
         {sessionData ? 'Sign out' : 'Sign in'}
       </button>
+      <div className="text-white">
+        <div className="text-2xl font-bold">posts:</div>
+        <ul>
+          {posts?.posts.map((post) => (
+            <li key={post.id}>{post.title}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

@@ -12,9 +12,11 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest run --reporter verbose",
-    "test:watch": "vitest watch --reporter verbose"
+    "test:watch": "vitest watch --reporter verbose",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@graphql-typed-document-node/core": "^3.1.2",
     "@headlessui/react": "^1.7.12",
     "@hookform/resolvers": "^2.9.11",
     "@markdoc/markdoc": "^0.2.2",
@@ -29,6 +31,7 @@
     "@trpc/server": "^10.9.0",
     "dayjs": "^1.11.7",
     "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
     "next": "13.1.6",
     "next-auth": "^4.19.0",
     "next-urql": "^4.0.3",
@@ -45,6 +48,12 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "3.2.2",
+    "@graphql-codegen/client-preset": "2.1.1",
+    "@graphql-codegen/introspection": "3.0.1",
+    "@graphql-codegen/typescript": "^3.0.2",
+    "@graphql-codegen/typescript-operations": "^3.0.2",
+    "@graphql-codegen/typescript-urql": "^3.7.3",
     "@storybook/addon-essentials": "^7.0.0-beta.61",
     "@storybook/addon-interactions": "^7.0.0-beta.61",
     "@storybook/addon-links": "^7.0.0-beta.61",
