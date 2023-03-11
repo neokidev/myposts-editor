@@ -23,7 +23,7 @@ const Posts: NextPage = () => {
             <PostCard
               key={post.id}
               post={post}
-              editUrl="/edit"
+              editUrl={`/${post.id}/edit`}
               onDelete={handleDelete}
             />
           ))}

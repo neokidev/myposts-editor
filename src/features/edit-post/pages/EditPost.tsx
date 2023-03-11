@@ -1,5 +1,9 @@
 import { type FC, useCallback, useState } from 'react'
-import { type Post, useCreatePostMutation } from '~/generated/graphql'
+import {
+  type Post,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+} from '~/generated/graphql'
 import { z } from 'zod'
 import toast, { Toaster } from 'react-hot-toast'
 import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
@@ -102,6 +106,12 @@ export const EditPost: FC<EditPostProps> = ({
   backUrl,
   onAfterSubmit,
 }) => {
+  const [postId] = useState(initialPost?.id)
+
+  if (!isNew && !postId) {
+    throw new Error('Specify the post ID when editing the existing post.')
+  }
+
   const [gutterIsActive, setGutterIsActive] = useState(false)
   const [selected, setSelected] = useState<ContentIconKey>('split')
   const [published, setPublished] = useState(initialPost?.published ?? true)
@@ -117,21 +127,27 @@ export const EditPost: FC<EditPostProps> = ({
     resolver: zodResolver(schema),
     defaultValues: {
       title: initialPost?.title ?? '',
-      content: initialPost?.title ?? '',
+      content: initialPost?.content ?? '',
     },
   })
 
   const content = useWatch({ control, name: 'content' })
   const [, createPost] = useCreatePostMutation()
+  const [, updatePost] = useUpdatePostMutation()
 
   const onSubmit: SubmitHandler<FormValues> = async ({ title, content }) => {
     setSubmitting(true)
-    const variables = { title, content, published }
 
     if (isNew) {
+      const variables = { title, content, published }
       await createPost(variables)
     } else {
-      throw new Error('Not implemented')
+      if (!postId) {
+        throw new Error('Specify the post ID when editing the existing post.')
+      }
+
+      const variables = { id: postId, title, content, published }
+      await updatePost(variables)
     }
 
     onAfterSubmit && (await onAfterSubmit())

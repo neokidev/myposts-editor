@@ -1,3 +1,9 @@
+query GetPost ($id: String!) {
+    post (id: $id) {
+        ...PostData
+    }
+}
+
 query GetPosts {
     posts {
         ...PostData
@@ -6,6 +12,12 @@ query GetPosts {
 
 mutation CreatePost ($title: String!, $content: String!, $published: Boolean!) {
     createPost(createPostInput: { title: $title, content: $content, published: $published }) {
+        ...PostData
+    }
+}
+
+mutation UpdatePost ($id: String!, $title: String, $content: String, $published: Boolean) {
+    updatePost(updatePostInput: { id: $id, title: $title, content: $content, published: $published }) {
         ...PostData
     }
 }

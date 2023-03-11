@@ -132,6 +132,13 @@ export type UserCount = {
   posts: Scalars['Int'];
 };
 
+export type GetPostQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string } };
+
 export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -146,6 +153,16 @@ export type CreatePostMutationVariables = Exact<{
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string } };
 
+export type UpdatePostMutationVariables = Exact<{
+  id: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+  content?: InputMaybe<Scalars['String']>;
+  published?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string } };
+
 export type PostDataFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string };
 
 export const PostDataFragmentDoc = gql`
@@ -158,6 +175,17 @@ export const PostDataFragmentDoc = gql`
   content
 }
     `;
+export const GetPostDocument = gql`
+    query GetPost($id: String!) {
+  post(id: $id) {
+    ...PostData
+  }
+}
+    ${PostDataFragmentDoc}`;
+
+export function useGetPostQuery(options: Omit<Urql.UseQueryArgs<GetPostQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetPostQuery, GetPostQueryVariables>({ query: GetPostDocument, ...options });
+};
 export const GetPostsDocument = gql`
     query GetPosts {
   posts {
@@ -181,4 +209,17 @@ export const CreatePostDocument = gql`
 
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
+export const UpdatePostDocument = gql`
+    mutation UpdatePost($id: String!, $title: String, $content: String, $published: Boolean) {
+  updatePost(
+    updatePostInput: {id: $id, title: $title, content: $content, published: $published}
+  ) {
+    ...PostData
+  }
+}
+    ${PostDataFragmentDoc}`;
+
+export function useUpdatePostMutation() {
+  return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
 };
