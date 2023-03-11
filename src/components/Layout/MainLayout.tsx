@@ -17,7 +17,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
           <div className="flex items-center justify-center"></div>
           <div className="flex items-center justify-end">
             <Link
-              href="/edit"
+              href="/new"
               className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600"
             >
               Create post

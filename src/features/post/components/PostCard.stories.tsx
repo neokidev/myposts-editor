@@ -25,7 +25,7 @@ export default meta
 type Story = StoryObj<typeof PostCard>
 
 export const PublishedPost: Story = {
-  args: { post, editPageHref: '#', onDelete: () => null },
+  args: { post, editUrl: '#', onDelete: () => null },
 }
 
 export const DraftPost: Story = {
@@ -34,13 +34,13 @@ export const DraftPost: Story = {
       ...post,
       published: false,
     },
-    editPageHref: '#',
+    editUrl: '#',
     onDelete: () => null,
   },
 }
 
 export const OpenDetailMenu: Story = {
-  args: { post, editPageHref: '#', onDelete: () => null },
+  args: { post, editUrl: '#', onDelete: () => null },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const detailButton = canvas.getByRole('button', { name: 'detail' })

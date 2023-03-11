@@ -18,5 +18,8 @@ module.exports = {
       prefer: 'type-imports',
       fixStyle: 'inline-type-imports'
     }]
-  }
+  },
+  ignorePatterns: [
+    "src/generated/*"
+  ]
 };

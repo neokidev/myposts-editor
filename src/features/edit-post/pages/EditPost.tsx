@@ -1,21 +1,24 @@
-import { type NextPage } from 'next'
+import { type FC, useCallback, useState } from 'react'
+import {
+  type Post,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+} from '~/generated/graphql'
+import { z } from 'zod'
+import toast, { Toaster } from 'react-hot-toast'
+import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
 import {
   type SubmitErrorHandler,
   type SubmitHandler,
   useForm,
   useWatch,
 } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { SubmitButton } from '~/features/edit-post'
 import { RadioGroup } from '@headlessui/react'
-import { useCallback, useState } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
 import Split from 'react-split'
 import { MarkdownRenderer } from '~/components/Renderer'
-import { useGlobalPointerUpEvent } from '~/hooks/useGlobalPointerUpEvent/useGlobalPointerUpEvent'
-import { SubmitButton } from '~/features/edit-post'
-import { useMutation } from 'urql'
-import Link from 'next/link'
 
 type ContentIconKey = 'edit' | 'split' | 'preview'
 const contentIcons: { [K in ContentIconKey]: JSX.Element } = {
@@ -90,18 +93,29 @@ const schema = z.object({
 
 const notify = () => toast.error("Title can't be blank")
 
-const CreatePost = `
-  mutation ($title: String!, $content: String!, $published: Boolean! ) {
-    createPost(createPostInput: { title: $title, content: $content, published: $published }) {
-      id
-    }
-  }
-`
+type EditPostProps = {
+  isNew: boolean
+  initialPost?: Partial<Post>
+  backUrl: string
+  onAfterSubmit?: () => void | Promise<void>
+}
 
-const Edit: NextPage = () => {
+export const EditPost: FC<EditPostProps> = ({
+  isNew,
+  initialPost,
+  backUrl,
+  onAfterSubmit,
+}) => {
+  const [postId] = useState(initialPost?.id)
+
+  if (!isNew && !postId) {
+    throw new Error('Specify the post ID when editing the existing post.')
+  }
+
   const [gutterIsActive, setGutterIsActive] = useState(false)
   const [selected, setSelected] = useState<ContentIconKey>('split')
-  const [published, setPublished] = useState(true)
+  const [published, setPublished] = useState(initialPost?.published ?? true)
+  const [submitting, setSubmitting] = useState(false)
 
   const handlePointerUp = useCallback(() => {
     setGutterIsActive(false)
@@ -112,23 +126,38 @@ const Edit: NextPage = () => {
   const { register, handleSubmit, control } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      title: '',
-      content: '',
+      title: initialPost?.title ?? '',
+      content: initialPost?.content ?? '',
     },
   })
 
   const content = useWatch({ control, name: 'content' })
-  const [, createPost] = useMutation(CreatePost)
+  const [, createPost] = useCreatePostMutation()
+  const [, updatePost] = useUpdatePostMutation()
 
   const onSubmit: SubmitHandler<FormValues> = async ({ title, content }) => {
-    const variables = { title, content, published }
-    await createPost(variables)
+    setSubmitting(true)
+
+    if (isNew) {
+      const variables = { title, content, published }
+      await createPost(variables)
+    } else {
+      if (!postId) {
+        throw new Error('Specify the post ID when editing the existing post.')
+      }
+
+      const variables = { id: postId, title, content, published }
+      await updatePost(variables)
+    }
+
+    onAfterSubmit && (await onAfterSubmit())
+    setSubmitting(false)
   }
 
   const onError: SubmitErrorHandler<FormValues> = () => notify()
 
   return (
-    <div>
+    <>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="flex h-screen flex-col bg-blue-50">
@@ -137,7 +166,7 @@ const Edit: NextPage = () => {
               <div className="flex items-center justify-start">
                 <Link
                   className="group flex text-sm font-medium leading-6 text-slate-500 hover:text-slate-600"
-                  href="/posts"
+                  href={backUrl}
                 >
                   <svg
                     viewBox="0 -9 3 24"
@@ -159,6 +188,7 @@ const Edit: NextPage = () => {
               <div className="flex items-center justify-end">
                 <div className="flex rounded-md shadow-sm">
                   <SubmitButton
+                    disabled={submitting}
                     published={published}
                     onChangePublished={setPublished}
                   />
@@ -282,10 +312,7 @@ const Edit: NextPage = () => {
           </div>
         </div>
       </form>
-
       <Toaster />
-    </div>
+    </>
   )
 }
-
-export default Edit
