@@ -1,6 +1,4 @@
 import { type NextPage } from 'next'
-import { type Post } from '~/features/post/types/post'
-import dayjs from 'dayjs'
 import { PostCard } from '~/features/post'
 import { useCallback } from 'react'
 import { MainLayout } from '~/components/Layout'
@@ -25,7 +23,7 @@ const Posts: NextPage = () => {
             <PostCard
               key={post.id}
               post={post}
-              editPageHref="/edit"
+              editUrl="/edit"
               onDelete={handleDelete}
             />
           ))}

@@ -56,13 +56,13 @@ const DetailButton: FC<DetailButtonProps> = ({ children, deletePost }) => {
 
 type PostCardProps = {
   post: Post
-  editPageHref: string
+  editUrl: string
   onDelete: (post: Post) => void
 }
 
 export const PostCard: FC<PostCardProps> = ({
   post,
-  editPageHref,
+  editUrl,
   onDelete,
 }) => {
   const deletePost = useCallback(() => onDelete(post), [post, onDelete])
@@ -81,7 +81,7 @@ export const PostCard: FC<PostCardProps> = ({
         </div>
       </div>
       <div className="col-span-1 flex items-center justify-center space-x-2">
-        <Link href={editPageHref} className={buttonClassName}>
+        <Link href={editUrl} className={buttonClassName}>
           <IconPencil className="h-4 w-4" />
         </Link>
         <DetailButton deletePost={deletePost}>
