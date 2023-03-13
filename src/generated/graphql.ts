@@ -163,6 +163,13 @@ export type UpdatePostMutationVariables = Exact<{
 
 export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string } };
 
+export type RemovePostMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemovePostMutation = { __typename?: 'Mutation', removePost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string } };
+
 export type PostDataFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, published: boolean, title: string, content: string };
 
 export const PostDataFragmentDoc = gql`
@@ -222,4 +229,15 @@ export const UpdatePostDocument = gql`
 
 export function useUpdatePostMutation() {
   return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
+};
+export const RemovePostDocument = gql`
+    mutation RemovePost($id: String!) {
+  removePost(id: $id) {
+    ...PostData
+  }
+}
+    ${PostDataFragmentDoc}`;
+
+export function useRemovePostMutation() {
+  return Urql.useMutation<RemovePostMutation, RemovePostMutationVariables>(RemovePostDocument);
 };
