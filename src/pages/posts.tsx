@@ -2,15 +2,27 @@ import { type NextPage } from 'next'
 import { PostCard } from '~/features/post'
 import { useCallback } from 'react'
 import { MainLayout } from '~/components/Layout'
-import { useGetPostsQuery } from '~/generated/graphql'
+import {
+  type Post,
+  useGetPostsQuery,
+  useRemovePostMutation,
+} from '~/generated/graphql'
+import { type CombinedError } from 'urql'
 
 const Posts: NextPage = () => {
   const [queryResult] = useGetPostsQuery()
+  const [, removePost] = useRemovePostMutation()
   const { data } = queryResult
 
-  const handleDelete = useCallback(() => {
-    alert('delete')
-  }, [])
+  const handleDelete = useCallback(
+    (post: Post) => {
+      const variables = { id: post.id }
+      removePost(variables).catch((e: CombinedError) => {
+        throw new Error(e.message)
+      })
+    },
+    [removePost]
+  )
 
   return (
     <MainLayout>

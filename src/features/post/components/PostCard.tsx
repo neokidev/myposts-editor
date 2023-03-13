@@ -1,10 +1,11 @@
-import { type FC, type ReactNode, useCallback } from 'react'
+import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { type Post } from '../types/post'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { IconAlertCircle, IconDots, IconPencil } from '@tabler/icons-react'
 import { Menu } from '@headlessui/react'
 import Link from 'next/link'
+import { DeleteConfirmationModal } from '~/features/post/components/DeleteConfirmationModal'
 
 dayjs.extend(relativeTime)
 
@@ -25,32 +26,47 @@ type DetailButtonProps = {
 }
 
 const DetailButton: FC<DetailButtonProps> = ({ children, deletePost }) => {
+  const [isOpenModal, setIsOpenModal] = useState(false)
+
+  const openModal = () => setIsOpenModal(true)
+  const closeModal = useCallback(() => {
+    setIsOpenModal(false)
+  }, [setIsOpenModal])
+
   return (
-    <Menu as="div" className="relative">
-      <Menu.Button className={buttonClassName} aria-label="detail">
-        {children}
-      </Menu.Button>
-      <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        <div className="p-1">
-          <Menu.Item>
-            {({ active }) => (
-              <button
-                onClick={deletePost}
-                className={`${
-                  active ? 'bg-red-50' : ''
-                } group flex w-full items-center rounded-md p-2 text-sm font-medium text-red-500`}
-              >
-                <IconAlertCircle
-                  className="mr-1.5 h-5 w-5"
-                  aria-hidden="true"
-                />
-                Delete this post
-              </button>
-            )}
-          </Menu.Item>
-        </div>
-      </Menu.Items>
-    </Menu>
+    <>
+      <Menu as="div" className="relative">
+        <Menu.Button className={buttonClassName} aria-label="detail">
+          {children}
+        </Menu.Button>
+        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="p-1">
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={openModal}
+                  className={`${
+                    active ? 'bg-red-50' : ''
+                  } group flex w-full items-center rounded-md p-2 text-sm font-medium text-red-500`}
+                >
+                  <IconAlertCircle
+                    className="mr-1.5 h-5 w-5"
+                    aria-hidden="true"
+                  />
+                  Delete this post
+                </button>
+              )}
+            </Menu.Item>
+          </div>
+        </Menu.Items>
+      </Menu>
+
+      <DeleteConfirmationModal
+        isOpen={isOpenModal}
+        onClose={closeModal}
+        deletePost={deletePost}
+      />
+    </>
   )
 }
 
@@ -60,11 +76,7 @@ type PostCardProps = {
   onDelete: (post: Post) => void
 }
 
-export const PostCard: FC<PostCardProps> = ({
-  post,
-  editUrl,
-  onDelete,
-}) => {
+export const PostCard: FC<PostCardProps> = ({ post, editUrl, onDelete }) => {
   const deletePost = useCallback(() => onDelete(post), [post, onDelete])
 
   return (
