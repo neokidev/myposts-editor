@@ -1,5 +1,5 @@
 import { type NextPage } from 'next'
-import { PostCard } from '~/features/post'
+import { PostCard, PostCardSkeleton } from '~/features/post'
 import { useCallback } from 'react'
 import { MainLayout } from '~/components/Layout'
 import {
@@ -8,11 +8,12 @@ import {
   useRemovePostMutation,
 } from '~/generated/graphql'
 import { type CombinedError } from 'urql'
+import { range } from 'lodash'
 
 const Posts: NextPage = () => {
   const [queryResult] = useGetPostsQuery()
   const [, removePost] = useRemovePostMutation()
-  const { data } = queryResult
+  const { data, fetching } = queryResult
 
   const handleDelete = useCallback(
     (post: Post) => {
@@ -31,14 +32,24 @@ const Posts: NextPage = () => {
           <h5 className="text-3xl font-bold text-slate-700">Posts</h5>
         </div>
         <div className="space-y-2">
-          {data?.posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              editUrl={`/${post.id}/edit`}
-              onDelete={handleDelete}
-            />
-          ))}
+          {fetching ? (
+            <>
+              {range(5).map((index) => (
+                <PostCardSkeleton key={index} />
+              ))}
+            </>
+          ) : (
+            <>
+              {data?.posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  editUrl={`/${post.id}/edit`}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
     </MainLayout>
