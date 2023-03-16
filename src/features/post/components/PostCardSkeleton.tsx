@@ -2,7 +2,7 @@ import ContentLoader from 'react-content-loader'
 
 const backgroundColor = '#f3f3f3'
 const foregroundColor = '#ecebeb'
-const radius = '0.375rem'
+const radius = '0.5rem'
 
 const titleSkeletonUniqueKey = 'TitleSkeleton'
 const TitleSkeleton = () => {
