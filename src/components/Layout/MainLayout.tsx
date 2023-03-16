@@ -25,8 +25,10 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
           </div>
         </div>
       </header>
-      <div className="flex-1 overflow-hidden">
-        <div className="mx-auto h-full max-w-7xl p-8">{children}</div>
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex-1">
+          <div className="mx-auto h-full max-w-7xl p-8">{children}</div>
+        </div>
       </div>
     </div>
   )
